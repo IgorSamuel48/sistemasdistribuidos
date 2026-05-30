@@ -1,0 +1,40 @@
+New-LocalUser -Name "admin_sd" -Password (Read-Host -AsSecureString "Digite a senha") -FullName "Administrador SD" -Description "Usuário administrador da atividade"
+
+Add-LocalGroupMember -Group "Administrators" -Member "admin_sd"
+
+New-LocalUser -Name "cliente_sd" -Password (Read-Host -AsSecureString "Digite a senha") -FullName "Cliente SD" -Description "Usuário comum da atividade"
+
+Add-LocalGroupMember -Group "Users" -Member "cliente_sd"
+
+5.3 Verificar usuários criados
+Get-LocalUser
+Verificar grupos:
+Get-LocalGroupMember -Group "Administrators"
+Get-LocalGroupMember -Group "Users"
+________________________________________
+Teste
+Entrar com o usuário cliente_sd e tentar alterar o firewall.
+Resultado esperado:
+Acesso negado ou solicitação de credenciais administrativas
+Evidência
+Print dos usuários criados e dos grupos.
+________________________________________
+
+voltar ao word
+
+6.5 Caso Basic Authentication não apareça
+Instalar o recurso pelo PowerShell:
+Install-WindowsFeature Web-Basic-Auth
+Depois reiniciar o IIS:
+iisreset
+
+
+7.4 Comando para consultar eventos
+No PowerShell:
+Get-EventLog -LogName Security -Newest 20
+Para filtrar falhas de login:
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} -MaxEvents 10
+Para filtrar logins bem-sucedidos:
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624} -MaxEvents 10
+
+Get-Service | Where-Object {$_.Status -eq "Running"}
