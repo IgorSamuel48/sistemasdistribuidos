@@ -1,0 +1,137 @@
+Abrir CMD:
+mkdir C:\MonitorDistribuido
+Entrar na pasta:
+cd C:\MonitorDistribuido
+Tempo estimado:
+5 minutos
+________________________________________
+Parte 2 — Instalar biblioteca Flask
+Abrir CMD:
+pip install flask
+Verificar instalação:
+pip show flask
+Resultado esperado:
+Name: Flask
+Version: ...
+Tempo:
+10 minutos
+________________________________________
+Parte 3 — Criar aplicação distribuída
+Criar arquivo:
+monitor.py
+Inserir:
+from flask import Flask
+import socket
+import platform
+import datetime
+import psutil
+
+app=Flask(__name__)
+
+@app.route('/status')
+
+def status():
+
+    return {
+
+        "Servidor":socket.gethostname(),
+
+        "Sistema":platform.system(),
+
+        "DataHora":str(datetime.datetime.now()),
+
+        "CPU":str(psutil.cpu_percent())+"%",
+
+        "Memoria":str(psutil.virtual_memory().percent)+"%"
+    }
+
+app.run(host='0.0.0.0',port=5000)
+Salvar.
+Tempo:
+20 minutos
+________________________________________
+Parte 4 — Instalar biblioteca de monitoramento
+No terminal:
+pip install psutil
+Tempo:
+5 minutos
+________________________________________
+Parte 5 — Executar servidor distribuído
+No terminal:
+python monitor.py
+Resultado esperado:
+Running on:
+
+http://0.0.0.0:5000
+Tempo:
+5 minutos
+________________________________________
+Parte 6 — Liberar porta no Windows Server
+PowerShell administrador:
+New-NetFirewallRule -DisplayName "Flask5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+Tempo:
+10 minutos
+________________________________________
+Parte 7 — Liberar porta no Azure
+Entrar em:
+VM → Networking
+Adicionar:
+Campo	Valor
+Porta	5000
+Protocolo	TCP
+Ação	Allow
+Tempo:
+15 minutos
+________________________________________
+Parte 8 — Teste local
+Na VM abrir navegador:
+http://localhost:5000/status
+Resultado esperado:
+{
+"Servidor":"VM01",
+"Sistema":"Windows",
+"CPU":"25%",
+"Memoria":"60%"
+}
+Tempo:
+10 minutos
+________________________________________
+Parte 9 — Teste externo
+No computador local:
+http://IP_DA_VM:5000/status
+Resultado esperado:
+Retorno JSON do servidor.
+Tempo:
+10 minutos
+________________________________________
+Parte 10 — Comunicação entre VMs (distribuído real)
+Os alunos deverão trocar IPs entre si.
+Cada aluno acessará:
+http://IP_COLEGA:5000/status
+Registrar:
+VM	CPU	Memória	Horário
+VM1	32%	45%	20:10
+VM2	15%	67%	20:11
+VM3	54%	72%	20:12
+Tempo:
+20–30 minutos
+________________________________________
+Parte 11 — Simular falha
+Parar aplicação:
+CTRL+C
+Outro aluno tenta acessar:
+http://IP_DA_VM:5000/status
+Resultado esperado:
+Erro de conexão
+Discutir:
+•	disponibilidade 
+•	falha 
+•	impacto em sistemas distribuídos 
+Tempo:
+15 minutos
+________________________________________
+Parte 12 — Recuperação do serviço
+Reiniciar:
+python monitor.py
+Tempo:
+5 minutos
