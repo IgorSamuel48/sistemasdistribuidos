@@ -1,0 +1,20 @@
+mkdir C:\SDProjeto
+cd C:\SDProjeto
+
+pip install flask
+pip install requests
+pip install psutil
+
+servidor no.py
+
+Firewall Windows:
+New-NetFirewallRule -DisplayName "API5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+
+mkdir C:\CompartilhadoSD
+
+Compartilhar pasta
+PowerShell:
+New-SmbShare -Name SDShare -Path C:\CompartilhadoSD -FullAccess Everyone
+Verificar:
+Get-SmbShare
+
